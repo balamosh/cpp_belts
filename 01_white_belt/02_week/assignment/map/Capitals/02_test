@@ -1,0 +1,26 @@
+24
+RENAME FakeCountry FarFarAway
+ABOUT FarFarAway
+DUMP
+CHANGE_CAPITAL TsardomOfRussia Moscow
+CHANGE_CAPITAL TsardomOfRussia Moscow
+CHANGE_CAPITAL ColonialBrazil Salvador
+CHANGE_CAPITAL TsardomOfRussia SaintPetersburg
+RENAME TsardomOfRussia RussianEmpire
+CHANGE_CAPITAL RussianEmpire Moscow
+CHANGE_CAPITAL RussianEmpire SaintPetersburg
+CHANGE_CAPITAL ColonialBrazil RioDeJaneiro
+DUMP
+RENAME ColonialBrazil EmpireOfBrazil
+ABOUT RussianEmpire
+RENAME EmpireOfBrazil UnitedStatesOfBrazil
+CHANGE_CAPITAL RussianEmpire Petrograd
+RENAME RussianEmpire RussianRepublic
+RENAME RussianRepublic USSR
+CHANGE_CAPITAL USSR Moscow
+CHANGE_CAPITAL UnitedStatesOfBrazil Brasilia
+RENAME UnitedStatesOfBrazil FederativeRepublicOfBrazil
+ABOUT RussianEmpire
+DUMP
+RENAME USSR USSR
+

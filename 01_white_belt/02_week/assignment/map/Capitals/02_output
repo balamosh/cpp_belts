@@ -1,0 +1,25 @@
+Incorrect rename, skip
+Country FarFarAway doesn't exist
+There are no countries in the world
+Introduce new country TsardomOfRussia with capital Moscow
+Country TsardomOfRussia hasn't changed its capital
+Introduce new country ColonialBrazil with capital Salvador
+Country TsardomOfRussia has changed its capital from Moscow to SaintPetersburg
+Country TsardomOfRussia with capital SaintPetersburg has been renamed to RussianEmpire
+Country RussianEmpire has changed its capital from SaintPetersburg to Moscow
+Country RussianEmpire has changed its capital from Moscow to SaintPetersburg
+Country ColonialBrazil has changed its capital from Salvador to RioDeJaneiro
+ColonialBrazil/RioDeJaneiro RussianEmpire/SaintPetersburg
+Country ColonialBrazil with capital RioDeJaneiro has been renamed to EmpireOfBrazil
+Country RussianEmpire has capital SaintPetersburg
+Country EmpireOfBrazil with capital RioDeJaneiro has been renamed to UnitedStatesOfBrazil
+Country RussianEmpire has changed its capital from SaintPetersburg to Petrograd
+Country RussianEmpire with capital Petrograd has been renamed to RussianRepublic
+Country RussianRepublic with capital Petrograd has been renamed to USSR
+Country USSR has changed its capital from Petrograd to Moscow
+Country UnitedStatesOfBrazil has changed its capital from RioDeJaneiro to Brasilia
+Country UnitedStatesOfBrazil with capital Brasilia has been renamed to FederativeRepublicOfBrazil
+Country RussianEmpire doesn't exist
+FederativeRepublicOfBrazil/Brasilia USSR/Moscow
+Incorrect rename, skip
+
