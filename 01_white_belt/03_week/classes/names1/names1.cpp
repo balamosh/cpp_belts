@@ -34,7 +34,7 @@ class Person
 			{
 				string	out = "";
 				out += FindLastName(year);
-				out += " last name with unknown first name";
+				out += " with unknown first name";
 				return (out);
 			}
 			else if (last_name_dict.count(year) == 0 &&
@@ -43,7 +43,7 @@ class Person
 
 				string	out = "";
 				out += FindFirstName(year);
-				out += " first name with unknown last name";
+				out += " with unknown last name";
 				return (out);
 			}
 			else
