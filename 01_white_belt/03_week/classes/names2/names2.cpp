@@ -1,3 +1,4 @@
+#include <string>
 #include <vector>
 #include <map>
 #include <algorithm>
@@ -8,8 +9,6 @@ class Person
 	public:
 		void	ChangeFirstName(int year, const string& first_name)
 		{
-			//if (FindFirstName(year) == first_name)
-			//	return ;
 			first_name_dict[year] = first_name;
 			first_name_years.push_back(year);
 			sort(first_name_years.begin(), first_name_years.end());
@@ -17,8 +16,6 @@ class Person
 		
 		void	ChangeLastName(int year, const string& last_name)
 		{
-			//if (FindLastName(year) == last_name)
-			//	return ;
 			last_name_dict[year] = last_name;
 			last_name_years.push_back(year);
 			sort(last_name_years.begin(), last_name_years.end());
@@ -38,7 +35,7 @@ class Person
 			{
 				string	out = "";
 				out += FindLastName(year);
-				out += " last name with unknown first name";
+				out += " with unknown first name";
 				return (out);
 			}
 			else if (last_name_dict.count(year) == 0 &&
@@ -46,7 +43,7 @@ class Person
 			{
 				string	out = "";
 				out += FindFirstName(year);
-				out += " first name with unknown last name";
+				out += " with unknown last name";
 				return (out);
 			}
 			else
@@ -84,7 +81,7 @@ class Person
 			int	max = -1;
 			for (auto y : v)
 			{
-				if (y <= year)
+				if (y < year)
 					max = y;
 				else
 					break ;
@@ -103,27 +100,24 @@ class Person
 				string	curr;
 				if (y <= year)
 				{
-					curr = Find(y, dict, v);
+					curr = dict.at(y);
 					if (curr != prev)
 					{
 						history.push_back(curr);
 						prev = curr;
 					}
 				}
-				else
-					break ;
 			}
 			int	len = history.size() - 1;
 			string	out = "";
-			if (len < 0)
+			if (len <= 0)
 				return (out);
 			for (int i = len - 1; i > 0; i--)
 			{
 				out += history[i];
 				out += ", ";
 			}
-			if (len)
-				out += history[0];
+			out += history[0];
 			return (out);
 		}
 

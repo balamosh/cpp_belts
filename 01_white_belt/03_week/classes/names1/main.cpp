@@ -1,5 +1,6 @@
 #include <iostream>
-#include "names1.cpp"
+#include "../names2/names2.cpp"
+using namespace std;
 
 int main() {
   Person person;
