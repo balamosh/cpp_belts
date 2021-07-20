@@ -7,7 +7,7 @@ int	main(void)
 	string		in_path = "input.txt";
 	string		out_path = "output.txt";
 	ifstream	in_file(in_path);
-	ofstream	out_file(out_path, ios_base::app);
+	ofstream	out_file(out_path);
 	if (in_file)
 	{
 		string	line;

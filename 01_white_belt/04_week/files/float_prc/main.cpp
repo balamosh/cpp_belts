@@ -9,17 +9,11 @@ int	main(void)
 	ifstream	file(path);
 	if (file)
 	{
+		cout << fixed << setprecision(3);
 		double	nbr;
-		while (true)
+		while (file >> nbr)
 		{
-			file >> nbr;
-			if (file.ignore(1))
-			{
-				cout << fixed << setprecision(3);
-				cout << nbr << endl;
-			}
-			else
-				break ;
+			cout << nbr << endl;
 		}
 	}
 	else
