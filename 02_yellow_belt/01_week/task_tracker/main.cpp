@@ -1,7 +1,6 @@
 #include <iostream>
 #include "structures.h"
 #include "team_tasks.cpp"
-//#include "structures.cpp"
 
 using namespace std;
 

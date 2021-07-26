@@ -2,7 +2,7 @@
 #include <map>
 #include <tuple>
 #include <algorithm>
-#include "structures.h"
+//#include "structures.h"
 
 using namespace std;
 
@@ -26,10 +26,6 @@ public:
       const string& person, int task_count)
   {
 	  task_count = min(task_count, TasksCountUnfinished(person));
-	  /*cout << endl 
-		  << "===========" << endl
-		  << "task count = " << task_count<< endl 
-		  << "===========" << endl;*/
 	  TasksInfo	updated;
 	  TasksInfo	rest;
 	  int		i = 0;
@@ -59,6 +55,8 @@ public:
 			  new_count += rest.at(info);
 		  if (new_count)
 		  	tasks[person][info] = new_count;
+		  else if (tasks[person].count(info))
+			tasks[person].erase(info);
 	  }
 	  rest.erase(TaskStatus::DONE);
 	  return {updated, rest};
