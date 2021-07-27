@@ -2,6 +2,7 @@
 #include <map>
 #include <tuple>
 #include <algorithm>
+#include <vector>
 //#include "structures.h"
 
 using namespace std;
@@ -48,32 +49,35 @@ public:
 				   TaskStatus::TESTING,
 				   TaskStatus::DONE})
 	  {
-		  int	new_count = 0;
-		  if (updated.count(info))
-			  new_count += updated.at(info);
-		  if (rest.count(info))
-			  new_count += rest.at(info);
-		  if (new_count)
-		  	tasks[person][info] = new_count;
-		  else if (tasks[person].count(info))
-			tasks[person].erase(info);
+		  tasks[person][info] = updated[info] + rest[info];
 	  }
 	  rest.erase(TaskStatus::DONE);
+	  EraseZeros(tasks[person]);
+	  EraseZeros(updated);
+	  EraseZeros(rest);
 	  return {updated, rest};
   }
 private:
   map<string, TasksInfo>	tasks;
 
-  int	TasksCountUnfinished(const string& person) const
+  int	TasksCountUnfinished(const string& person)
   {
-	  int	count = 0;
-	  if (tasks.at(person).count(TaskStatus::NEW))
-		  count += tasks.at(person).at(TaskStatus::NEW);
-	  if (tasks.at(person).count(TaskStatus::IN_PROGRESS))
-		  count += tasks.at(person).at(TaskStatus::IN_PROGRESS);
-	  if (tasks.at(person).count(TaskStatus::TESTING))
-		  count += tasks.at(person).at(TaskStatus::TESTING);
-	  return (count);
+		  return (tasks[person][TaskStatus::NEW]
+			+ tasks[person][TaskStatus::IN_PROGRESS]
+			+ tasks[person][TaskStatus::TESTING]);
+  }
 
+  void	EraseZeros(TasksInfo& map_to_erase)
+  {
+	  vector<TaskStatus>	statuses_to_remove;
+	  for (const auto& [info, count] : map_to_erase)
+	  {
+		  if (count == 0)
+			  statuses_to_remove.push_back(info);
+	  }
+	  for (const TaskStatus& status : statuses_to_remove)
+	  {
+		  map_to_erase.erase(status);
+	  }
   }
 };
