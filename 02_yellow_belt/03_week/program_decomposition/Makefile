@@ -15,7 +15,7 @@ CFLAGS		= -Wall -Wextra -Werror --std=c++17
 
 RM		= rm -f
 
-all		: $(LIB)
+all		: $(NAME)
 
 obj		: $(SRCS)
 

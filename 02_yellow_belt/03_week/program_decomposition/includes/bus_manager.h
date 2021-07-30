@@ -4,6 +4,8 @@
 #include <vector>
 #include <map>
 
+#include "responses.h"
+
 using namespace std;
 
 class BusManager {
