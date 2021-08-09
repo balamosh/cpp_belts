@@ -6,7 +6,7 @@
 using namespace std;
 
 int main() {
-  const vector<string> sorted_strings = {"moscow", "murmansk", "vologda"};
+  const vector<string> sorted_strings = {"a", "aboba", "moscow", "murmansk", "vologda"};
   
   const auto m_result =
       FindStartsWith(begin(sorted_strings), end(sorted_strings), 'm');
