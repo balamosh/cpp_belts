@@ -12,12 +12,12 @@ public:
 	: Name(name)
 	, Type(type) {}
 
-	void	PrintInfo() const {
-		cout << Type << ": " << Name;
+	string	PersonInfo() const {
+		return (Type + ": " + Name);
 	}
 	
 	virtual void	Walk(const string& destination) const {
-		PrintInfo();
+		cout << PersonInfo();
 		cout << " walks to: " << destination << endl;
     }
 
@@ -35,18 +35,17 @@ public:
 	, FavouriteSong(favouriteSong) {}
 
     void	Learn() const {
-		PrintInfo();
+		cout << PersonInfo();
         cout << " learns" << endl;
     }
 
 	void	SingSong() const {      
-		PrintInfo();
+		cout << PersonInfo();
 		cout << " sings a song: " << FavouriteSong << endl;
     }
 
     void	Walk(const string& destination) const override {
-		PrintInfo();      
-		cout << " walks to: " << destination << endl;
+		Person::Walk(destination);
         SingSong();
     }
 
@@ -63,7 +62,7 @@ public:
 	, Subject(subject) {}
 
     void	Teach() const {
-		PrintInfo();
+		cout << PersonInfo();
         cout << " teaches: " << Subject << endl;
     }
 
@@ -79,14 +78,14 @@ public:
 	: Person(name, "Policeman") {}
 
     void	Check(const Person& p) const {
-		PrintInfo();
+		cout << PersonInfo();
         cout << " checks " << p.Type << ". " 
 			<< p.Type << "'s name is: " << p.Name << endl;
     }    
 };
 
 
-void	VisitPlaces(Person person, const vector<string>& places) {
+void	VisitPlaces(Person& person, const vector<string>& places) {
     for (const auto& p : places) {
         person.Walk(p);
     }
