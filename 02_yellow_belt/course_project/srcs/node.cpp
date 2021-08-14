@@ -5,7 +5,16 @@
 using namespace std;
 
 bool
-EmptyNode::Evaluate(const Date& date, const string& event) override {
+Node::Evaluate(const Date& date, const string& event) {
+	(void) date;
+	(void) event;
+	return (true);
+}
+
+bool
+EmptyNode::Evaluate(const Date& date, const string& event) {
+	(void) date;
+	(void) event;
 	return (false);
 }
 
@@ -13,15 +22,15 @@ template <class T>
 bool	CompateEntity(const T& lhs, const T& rhs, Comparison cmp) {
 	if (cmp == Comparison::Less) {
 		return (lhs < rhs);
-	} else if (__cmp == Comparison::LessOrEqual) {
+	} else if (cmp == Comparison::LessOrEqual) {
 		return (lhs <= rhs);
-	} else if (__cmp == Comparison::Greater) {
+	} else if (cmp == Comparison::Greater) {
 		return (lhs > rhs);
-	} else if (__cmp == Comparison::GreaterOrEqual) {
+	} else if (cmp == Comparison::GreaterOrEqual) {
 		return (lhs >= rhs);
-	} else if (__cmp == Comparison::Equal) {
+	} else if (cmp == Comparison::Equal) {
 		return (lhs == rhs);
-	} else if (__cmp == Comparison::NotEqual) {
+	} else if (cmp == Comparison::NotEqual) {
 		return (lhs != rhs);
 	} else {
 		return (false);
@@ -29,7 +38,8 @@ bool	CompateEntity(const T& lhs, const T& rhs, Comparison cmp) {
 }
 
 bool
-DateComparisonNode::Evaluate(const Date& date, const string& event) override {
+DateComparisonNode::Evaluate(const Date& date, const string& event) {
+	(void) event;
 	auto	lhs = make_tuple(date.GetYear(), date.GetMonth(), date.GetDay());
 	auto	rhs = make_tuple(__cmp_date.GetYear(),
 								__cmp_date.GetMonth(),
@@ -38,14 +48,15 @@ DateComparisonNode::Evaluate(const Date& date, const string& event) override {
 }
 
 bool
-EventComparisonNode::Evaluate(const Date& date, const string& event) override {
+EventComparisonNode::Evaluate(const Date& date, const string& event) {
+	(void) date;
 	return (CompateEntity(event, __cmp_event, __cmp));
 }
 
 bool
-LogicalOperationNode::Evaluate(const Date& date, const string& event) override {
-	auto	left = __left.Evaluate(date, event);
-	auto	right = __right.Evaluate(date, event);
+LogicalOperationNode::Evaluate(const Date& date, const string& event) {
+	auto	left = __left->Evaluate(date, event);
+	auto	right = __right->Evaluate(date, event);
 	if (__op == LogicalOperation::And) {
 		return (left && right);
 	} else if (__op == LogicalOperation::Or) {

@@ -2,6 +2,10 @@
 
 #include "date.h"
 
+#include <memory>
+
+using namespace std;
+
 enum class Comparison {
 	Less,
 	LessOrEqual,
@@ -18,15 +22,18 @@ enum class LogicalOperation {
 
 class Node {
 public:
-	bool	Evaluate(const Date& date, const string& event) = 0;
+	virtual
+	bool	Evaluate(const Date& date, const string& event);
 };
 
-class EmptyNode : public Node {	
+class EmptyNode : public Node {
+	bool	Evaluate(const Date& date, const string& event) override ;	
 };
 
 class DateComparisonNode : public Node {
 public:
 	DateComparisonNode(const Comparison& cmp, const Date& cmp_date);
+	bool	Evaluate(const Date& date, const string& event) override ;
 private:
 	Comparison	__cmp;
 	Date		__cmp_date;
@@ -35,6 +42,7 @@ private:
 class EventComparisonNode : public Node {
 public:
 	EventComparisonNode(const Comparison& cmp, const string& cmp_event);
+	bool	Evaluate(const Date& date, const string& event) override ;
 private:
 	Comparison	__cmp;
 	string		__cmp_event;
@@ -45,8 +53,9 @@ public:
 	LogicalOperationNode(
 		const LogicalOperation& op, 
 		const Node& left, const Node& right);
+	bool	Evaluate(const Date& date, const string& event) override ;
 private:
 	LogicalOperation	__op;
-	Node				__left;
-	Node				__right;
+	shared_ptr<Node>	__left;
+	shared_ptr<Node>	__right;
 };
