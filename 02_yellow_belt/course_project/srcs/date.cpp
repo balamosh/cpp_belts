@@ -1,5 +1,9 @@
 #include "date.h"
 
+#include <iomanip>
+
+using namespace std;
+
 // Date methods
 
 Date::Date(int y, int m, int d) : year(y), month(m), day(d) {}
@@ -14,7 +18,11 @@ int	Date::GetDay() const { return (day); }
 
 Date		ParseDate(istream& is) {
 	int	year, month, day;
-	is >> year >> ignore(1) >> month >> ignore(1) >> day;
+	is >> year;
+	is.ignore(1);
+	is >> month;
+	is.ignore(1);
+	is >> day;
 	return (Date(year, month, day));
 }
 
