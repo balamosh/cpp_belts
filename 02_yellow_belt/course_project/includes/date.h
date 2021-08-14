@@ -11,6 +11,7 @@ public:
 	int	GetYear() const;
 	int	GetMonth() const;
 	int	GetDay() const;
+	string	to_string() const;
 
 private:
 	int	year;

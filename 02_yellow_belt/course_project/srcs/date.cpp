@@ -14,6 +14,10 @@ int	Date::GetMonth() const { return (month); }
 
 int	Date::GetDay() const { return (day); }
 
+string	Date::to_string() const {
+	return (to_string(year) + "-" + to_string(month) + "-" + to_string(day));
+}
+
 // Functions
 
 Date		ParseDate(istream& is) {
