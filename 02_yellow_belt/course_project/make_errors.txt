@@ -1,2 +1,0 @@
-g++ --std=c++17 -c srcs/database.cpp -o srcs/database.o -I includes/
-g++ --std=c++17 -c srcs/database.cpp -o srcs/database.o -I includes/

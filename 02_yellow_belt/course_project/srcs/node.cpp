@@ -16,17 +16,10 @@ LogicalOperationNode::LogicalOperationNode(
 : __op(op), __left(left), __right(right) {}
 
 bool
-Node::Evaluate(const Date& date, const string& event) {
-	(void) date;
-	(void) event;
-	return (true);
-}
-
-bool
 EmptyNode::Evaluate(const Date& date, const string& event) {
 	(void) date;
 	(void) event;
-	return (false);
+	return (true);
 }
 
 template <typename T>
@@ -73,6 +66,6 @@ LogicalOperationNode::Evaluate(const Date& date, const string& event) {
 	} else if (__op == LogicalOperation::Or) {
 		return (left || right);
 	} else {
-		return (false);
+		throw invalid_argument("Invalid logical operation");
 	}
 }
