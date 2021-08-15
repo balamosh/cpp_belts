@@ -11,7 +11,7 @@ public:
 	int	GetYear() const;
 	int	GetMonth() const;
 	int	GetDay() const;
-	string	to_string() const;
+	string	convert_to_string() const;
 
 private:
 	int	year;
@@ -22,3 +22,5 @@ private:
 Date		ParseDate(istream& is);
 
 ostream&	operator << (ostream& os, const Date& date);
+
+bool		operator < (const Date& lhs, const Date& rhs);

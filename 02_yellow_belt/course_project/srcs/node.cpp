@@ -18,7 +18,7 @@ EmptyNode::Evaluate(const Date& date, const string& event) {
 	return (false);
 }
 
-template <class T>
+template <typename T>
 bool	CompateEntity(const T& lhs, const T& rhs, Comparison cmp) {
 	if (cmp == Comparison::Less) {
 		return (lhs < rhs);

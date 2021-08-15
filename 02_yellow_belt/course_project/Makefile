@@ -2,7 +2,7 @@ SRCS_SUFFIX	= .cpp
 
 SRCS_DIR	= ./srcs
 
-SRCS		= $(shell find $(SRCS_DIR) -name "*$(SRCS_SUFFIX)")
+SRCS		= $(shell find $(SRCS_DIR) \( -name "*$(SRCS_SUFFIX)" -and \( ! -name "main.cpp" \) \))
 
 OBJS		= $(SRCS:$(SRCS_SUFFIX)=.o)
 
@@ -11,18 +11,19 @@ HEAD		= includes/
 NAME		= project.out
 
 CC			= g++
-CFLAGS		= -Wall -Wextra -Werror --std=c++17
+CFLAGS		= --std=c++17
 
 RM			= rm -f
 
 all				: $(NAME)
 
-obj				: $(SRCS)
+obj				: $(OBJS)
 
 $(SRC_DIR)%.o 	: $(SRC_DIR)%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@ -I $(HEAD)
 
 $(NAME)			: $(OBJS)
+	$(CC) $(CFLAGS) -c $(SRCS_DIR)/main.cpp -o main.o -I $(HEAD)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 
 clean			:

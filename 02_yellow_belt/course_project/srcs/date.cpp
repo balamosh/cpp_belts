@@ -1,6 +1,7 @@
 #include "date.h"
 
 #include <iomanip>
+#include <tuple>
 
 using namespace std;
 
@@ -14,7 +15,7 @@ int	Date::GetMonth() const { return (month); }
 
 int	Date::GetDay() const { return (day); }
 
-string	Date::to_string() const {
+string	Date::convert_to_string() const {
 	return (to_string(year) + "-" + to_string(month) + "-" + to_string(day));
 }
 
@@ -33,4 +34,9 @@ Date		ParseDate(istream& is) {
 ostream&	operator << (ostream& os, const Date& date) {
 	os << date.GetYear() << '-' << date.GetMonth() << '-' << date.GetDay();
 	return (os);
+}
+
+bool		operator < (const Date& lhs, const Date& rhs) {
+	return (make_tuple(lhs.GetYear(), lhs.GetMonth(), lhs.GetDay()) <
+			make_tuple(rhs.GetYear(), rhs.GetMonth(), rhs.GetDay()));
 }
