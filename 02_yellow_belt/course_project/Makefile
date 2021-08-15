@@ -23,8 +23,8 @@ $(SRC_DIR)%.o 	: $(SRC_DIR)%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@ -I $(HEAD)
 
 $(NAME)			: $(OBJS)
-	$(CC) $(CFLAGS) -c $(SRCS_DIR)/main.cpp -o main.o -I $(HEAD)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+	$(CC) $(CFLAGS) -c $(SRCS_DIR)/main.cpp -o $(SRCS_DIR)/main.o -I $(HEAD)
+	$(CC) $(CFLAGS) -o $(NAME) $(SRCS_DIR)/main.o $(OBJS)
 
 clean			:
 	$(RM) $(OBJS)

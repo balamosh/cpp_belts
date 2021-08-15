@@ -4,6 +4,17 @@
 
 using namespace std;
 
+DateComparisonNode::DateComparisonNode(const Comparison& cmp, const Date& cmp_date)
+: __cmp(cmp), __cmp_date(cmp_date) {}
+
+EventComparisonNode::EventComparisonNode(const Comparison& cmp, const string& cmp_event)
+: __cmp(cmp), __cmp_event(cmp_event) {}
+
+LogicalOperationNode::LogicalOperationNode(
+		const LogicalOperation& op, 
+		shared_ptr<Node> left, shared_ptr<Node> right)
+: __op(op), __left(left), __right(right) {}
+
 bool
 Node::Evaluate(const Date& date, const string& event) {
 	(void) date;

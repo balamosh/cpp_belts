@@ -52,7 +52,7 @@ class LogicalOperationNode : public Node {
 public:
 	LogicalOperationNode(
 		const LogicalOperation& op, 
-		shared_ptr<Node>& left, shared_ptr<Node>& right);
+		shared_ptr<Node> left, shared_ptr<Node> right);
 	bool	Evaluate(const Date& date, const string& event) override ;
 private:
 	LogicalOperation	__op;
