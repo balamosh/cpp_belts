@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <algorithm>
 
 using namespace std;
 
@@ -17,11 +18,13 @@ public:
 	template <typename Func>
 	int				RemoveIf(Func predicate) {
 		int	ret = 0;
-		for (const auto& [date, events] : date_to_events) {
-			for (const auto& event : events) {
-				if (predicate(date, event)) {
-					date_to_events[date].erase(event);
+		for (auto& [date, events] : date_to_events) {
+			for (auto it = begin(events); it != end(events); ) {
+				if (predicate(date, *it)) {
+					it = events.erase(it);
 					ret++;
+				} else {
+					++it;
 				}
 			}
 		}

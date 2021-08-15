@@ -32,7 +32,12 @@ Date		ParseDate(istream& is) {
 }
 
 ostream&	operator << (ostream& os, const Date& date) {
-	os << date.GetYear() << '-' << date.GetMonth() << '-' << date.GetDay();
+	os << setfill('0');
+	os << setw(4) << date.GetYear() 
+		<< '-' 
+		<< setw(2) << date.GetMonth() 
+		<< '-' 
+		<< setw(2) << date.GetDay();
 	return (os);
 }
 

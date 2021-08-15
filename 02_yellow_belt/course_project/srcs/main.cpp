@@ -12,7 +12,19 @@ using namespace std;
 string ParseEvent(istream& is) {
   // Реализуйте эту функцию
 	string	event;
-	is >> event;
+	while (is.peek() == ' ') {
+		is.ignore();
+	}
+	while (is.peek() != EOF) {
+		if (is.peek() == '\n')
+		{
+			is.ignore();
+			break ;
+		}
+		char	c;
+		c = is.get();
+		event.push_back(c);
+	}
 	return (event);
 }
 
