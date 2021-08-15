@@ -19,22 +19,24 @@ public:
 	template <typename Func>
 	int				RemoveIf(Func predicate) {
 		int	ret = 0;
-		for (auto& [date, events] : date_to_events) {
-			for (auto it = begin(events); it != end(events); ) {
-				if (predicate(date, *it)) {
-					it = events.erase(it);
-					ret++;
-				} else {
-					++it;
-				}
+		vector<Date>	clean;
+		for (auto& [_date, events] : date_to_events) {
+			Date	date = _date;
+			auto	size = events.size();
+			auto	it = stable_partition(begin(events), end(events),
+											[predicate, date] (const string& elem) {
+												return (!predicate(date, elem));
+											});
+			if (it == begin(events)) {
+				ret += size;
+				clean.push_back(date);
+			} else {
+				ret += distance(it, end(events));
+				events.erase(it, end(events));
 			}
 		}
-		for (auto it = begin(date_to_events); it != end(date_to_events); ) {
-			if (it->second.empty()) {
-				it = date_to_events.erase(it);
-			} else {
-				++it;
-			}
+		for (const auto& date : clean) {
+			date_to_events.erase(date);
 		}
 		return (ret);
 	}
@@ -58,4 +60,5 @@ public:
 
 private:
 	map<Date, vector<string>>	date_to_events;
+	map<Date, set<string>>		date_to_events_set;
 };
