@@ -12,7 +12,8 @@ tuple<int, int, int>	DateTuple(const Date& date) {
 }
 
 void	Database::Add(const Date& date, const string& event) {	
-	date_to_events[date].insert(event);
+	if (count(begin(date_to_events[date]), end(date_to_events[date]), event) == 0)
+		date_to_events[date].push_back(event);
 }
 
 void	Database::Print(ostream& os) const {
@@ -24,20 +25,18 @@ void	Database::Print(ostream& os) const {
 }
 
 string			Database::Last(const Date& date) const {
-	auto	last = upper_bound(begin(date_to_events), end(date_to_events), date,
-						[] (const Date& d, const pair<Date, set<string>>& x) {
-							return (DateTuple(x.first) < DateTuple(d));
-						});
+	if (date_to_events.empty())
+		throw invalid_argument("No entries");
+	auto	last = date_to_events.upper_bound(date);
 	if (last == begin(date_to_events)) {
 		throw invalid_argument("No entries");
-	} else {
-		last--;
-		if ((*last).second.empty())
-			throw invalid_argument("No entries");
-		auto	last_date = (*last).first;
-		auto	last_event = (*last).second.end();
-		last_event--;
-		return (last_date.convert_to_string() + " " + *last_event);
 	}
-	return ("");
+	last--;
+		if (last->second.empty()) {
+		throw invalid_argument("No entries");
+	}
+	auto	last_date = last->first;
+	//auto	last_event = last->second.end();
+	//last_event--;
+	return (last_date.convert_to_string() + " " + last->second.back());
 }

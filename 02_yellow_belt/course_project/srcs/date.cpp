@@ -2,6 +2,7 @@
 
 #include <iomanip>
 #include <tuple>
+#include <sstream>
 
 using namespace std;
 
@@ -16,7 +17,9 @@ int	Date::GetMonth() const { return (month); }
 int	Date::GetDay() const { return (day); }
 
 string	Date::convert_to_string() const {
-	return (to_string(year) + "-" + to_string(month) + "-" + to_string(day));
+	ostringstream	out;
+	out << Date(year, month, day);
+	return (out.str());
 }
 
 // Functions

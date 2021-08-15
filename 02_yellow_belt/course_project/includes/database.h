@@ -7,6 +7,7 @@
 #include <map>
 #include <set>
 #include <algorithm>
+#include <sstream>
 
 using namespace std;
 
@@ -28,6 +29,13 @@ public:
 				}
 			}
 		}
+		for (auto it = begin(date_to_events); it != end(date_to_events); ) {
+			if (it->second.empty()) {
+				it = date_to_events.erase(it);
+			} else {
+				++it;
+			}
+		}
 		return (ret);
 	}
 	
@@ -37,7 +45,9 @@ public:
 		for (const auto& [date, events] : date_to_events) {
 			for (const auto& event : events) {
 				if (predicate(date, event)) {
-					ret.push_back(event);
+					ostringstream	out;
+					out << date << " " << event;
+					ret.push_back(out.str());
 				}
 			}
 		}
@@ -47,5 +57,5 @@ public:
 	string			Last(const Date& date) const;
 
 private:
-	map<Date, set<string>>	date_to_events;
+	map<Date, vector<string>>	date_to_events;
 };
