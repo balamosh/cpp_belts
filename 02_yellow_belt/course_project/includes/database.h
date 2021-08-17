@@ -1,6 +1,7 @@
 #pragma once
 
 #include "date.h"
+#include "event_list.h"
 
 #include <iostream>
 #include <vector>
@@ -11,54 +12,59 @@
 
 using namespace std;
 
+struct Entry {
+	Date	date;
+	string	event;
+};
+
+ostream &operator<<(ostream &os, const Entry &e);
+
+bool operator==(const Entry &lhs, const Entry &rhs);
+
+bool operator!=(const Entry &lhs, const Entry &rhs);
+
 class Database {
 public:
-	void			Add(const Date& date, const string& event);
-	void			Print(ostream& os) const;
-	
-	template <typename Func>
-	int				RemoveIf(Func predicate) {
-		int	ret = 0;
-		vector<Date>	clean;
-		for (auto& [_date, events] : date_to_events) {
-			Date	date = _date;
-			auto	size = events.size();
-			auto	it = stable_partition(begin(events), end(events),
-											[predicate, date] (const string& elem) {
-												return (!predicate(date, elem));
-											});
-			if (it == begin(events)) {
-				ret += size;
-				clean.push_back(date);
-			} else {
-				ret += distance(it, end(events));
-				events.erase(it, end(events));
-			}
-		}
-		for (const auto& date : clean) {
-			date_to_events.erase(date);
-		}
-		return (ret);
-	}
-	
-	template <typename Func>
-	vector<string>	FindIf(Func predicate) const {
-		vector<string>	ret;
-		for (const auto& [date, events] : date_to_events) {
-			for (const auto& event : events) {
-				if (predicate(date, event)) {
-					ostringstream	out;
-					out << date << " " << event;
-					ret.push_back(out.str());
-				}
-			}
-		}
-		return (ret);
-	}
+    void Add(const Date &date, const string &event);
 
-	string			Last(const Date& date) const;
+    void Print(ostream &os) const;
+
+    template<typename Func>
+    vector<Entry> FindIf(Func predicate) const {
+        vector<Entry> result;
+        for (auto& [date, events] : storage) {
+            for (const auto& event : events.GetAll()) {
+                if (predicate(date, event)) {
+                    result.push_back(Entry{date, event});
+                }
+            }
+        }
+        return result;
+    }
+
+    template <typename Func>
+    int RemoveIf(Func predicate) {
+        int result = 0;
+        for (auto& [date, events] : storage) {
+            const Date& cpy_date = date;
+            result += events.RemoveIf([=](const string& event) {
+                return predicate(cpy_date, event);
+            });
+        }
+        for (auto it = storage.begin(); it != storage.end(); ) {
+            if (it->second.GetAll().empty()) {
+                storage.erase(it++);
+            } else {
+                ++it;
+            }
+        }
+        return result;
+    }
+
+    Entry Last(const Date &date) const;
 
 private:
-	map<Date, vector<string>>	date_to_events;
-	map<Date, set<string>>		date_to_events_set;
+    map<Date, EventList> storage;
 };
+
+ostream &operator<<(ostream &stream, const pair<Date, string> &p);
