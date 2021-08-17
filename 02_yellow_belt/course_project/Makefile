@@ -41,4 +41,4 @@ fclean			: clean
 
 re				: fclean all
 
-.PHONY	 		: all obj clean fclean re
+.PHONY	 		: all obj tar clean fclean re
