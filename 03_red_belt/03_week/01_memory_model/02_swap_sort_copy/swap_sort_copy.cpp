@@ -5,13 +5,32 @@
 using namespace std;
 
 template <typename T>
-void Swap(T* first, T* second);
+void Swap(T* first, T* second) {
+	T	tmp;
+	tmp = *first;
+	*first = *second;
+	*second = tmp;
+}
 
 template <typename T>
-void SortPointers(vector<T*>& pointers);
+void SortPointers(vector<T*>& pointers) {
+	sort(begin(pointers), end(pointers),
+		[] (T* lhs, T* rhs) {
+			return (*lhs < *rhs);
+		});
+}
 
 template <typename T>
-void ReversedCopy(T* source, size_t count, T* destination);
+void ReversedCopy(T* source, size_t count, T* destination) {
+	vector<T>	src_copy;
+	for (int i = 0; i < count; i++) {
+		src_copy.push_back(source[i]);
+	}
+	for (int i = 0; i < count; i++) {
+		destination[i] = src_copy.back();
+		src_copy.pop_back();
+	}
+}
 
 void TestSwap() {
   int a = 1;
@@ -28,8 +47,8 @@ void TestSwap() {
 }
 
 void TestSortPointers() {
-  int one = 1;
   int two = 2;
+  int one = 1;
   int three = 3;
 
   vector<int*> pointers;
