@@ -1,0 +1,12 @@
+11
+CLIENTS Marriott
+ROOMS Marriott
+BOOK 10 FourSeasons 1 2
+BOOK 10 Marriott 1 1
+BOOK 86409 FourSeasons 2 1
+CLIENTS FourSeasons
+ROOMS FourSeasons
+CLIENTS Marriott
+BOOK 86410 Marriott 2 10
+ROOMS FourSeasons
+ROOMS Marriott
