@@ -33,7 +33,7 @@ public:
   void EraseAll(TAirport airport);
 
   using Item = pair<TAirport, size_t>;
-  using Items = /* ??? */;
+  using Items = array<Item, static_cast<uint32_t>(TAirport::Last_)>;
 
   // получить некоторый объект, по которому можно проитерироваться,
   // получив набор объектов типа Item - пар (аэропорт, количество),
@@ -41,8 +41,46 @@ public:
   Items GetItems() const;
 
 private:
-  // ???
+  Items	data_;
 };
+
+template <typename TAirport>
+AirportCounter<TAirport>::AirportCounter() : AirportCounter(data_.begin(), data_.end()) {}
+
+template <typename TAirport>
+template <typename TIterator>
+AirportCounter<TAirport>::AirportCounter(TIterator begin, TIterator end) {
+	/*for (auto it = begin; it != end; ++it) {
+		++data_[static_cast<uint32_t>(*it)].second;
+	}*/
+}
+
+template <typename TAirport>
+size_t AirportCounter<TAirport>::Get(TAirport airport) const {
+	return (data_.at(static_cast<uint32_t>(airport)).second);
+}
+
+template <typename TAirport>
+void AirportCounter<TAirport>::Insert(TAirport airport) {
+	++data_[static_cast<uint32_t>(airport)].second;
+}
+
+template <typename TAirport>
+void AirportCounter<TAirport>::EraseOne(TAirport airport) {
+	--data_[static_cast<uint32_t>(airport)].second;
+}
+  
+template <typename TAirport>
+void AirportCounter<TAirport>::EraseAll(TAirport airport) {
+	data_[static_cast<uint32_t>(airport)].second = 0;
+}
+  
+template <typename TAirport>
+typename AirportCounter<TAirport>::Items AirportCounter<TAirport>::GetItems() const {
+	return (data_);
+}
+
+
 
 void TestMoscow() {
   enum class MoscowAirport {
