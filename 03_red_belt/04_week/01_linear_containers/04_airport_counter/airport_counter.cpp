@@ -13,8 +13,9 @@ using namespace std;
 template <typename TAirport>
 class AirportCounter {
 public:
+  const static uint32_t	N = static_cast<uint32_t>(TAirport::Last_);
   // конструктор по умолчанию: список элементов пока пуст
-  AirportCounter();
+  AirportCounter() = default;
 
   // конструктор от диапазона элементов типа TAirport
   template <typename TIterator>
@@ -33,7 +34,7 @@ public:
   void EraseAll(TAirport airport);
 
   using Item = pair<TAirport, size_t>;
-  using Items = array<Item, static_cast<uint32_t>(TAirport::Last_)>;
+  using Items = array<Item, N>;
 
   // получить некоторый объект, по которому можно проитерироваться,
   // получив набор объектов типа Item - пар (аэропорт, количество),
@@ -41,43 +42,45 @@ public:
   Items GetItems() const;
 
 private:
-  Items	data_;
+  array<uint32_t, N>	data_;
 };
-
-template <typename TAirport>
-AirportCounter<TAirport>::AirportCounter() : AirportCounter(data_.begin(), data_.end()) {}
 
 template <typename TAirport>
 template <typename TIterator>
 AirportCounter<TAirport>::AirportCounter(TIterator begin, TIterator end) {
-	/*for (auto it = begin; it != end; ++it) {
-		++data_[static_cast<uint32_t>(*it)].second;
-	}*/
+	for (auto it = begin; it != end; ++it) {
+		uint32_t	i = static_cast<uint32_t>(*it);
+		++data_[i];
+	}
 }
 
 template <typename TAirport>
 size_t AirportCounter<TAirport>::Get(TAirport airport) const {
-	return (data_.at(static_cast<uint32_t>(airport)).second);
+	return (data_.at(static_cast<uint32_t>(airport)));
 }
 
 template <typename TAirport>
 void AirportCounter<TAirport>::Insert(TAirport airport) {
-	++data_[static_cast<uint32_t>(airport)].second;
+	++data_[static_cast<uint32_t>(airport)];
 }
 
 template <typename TAirport>
 void AirportCounter<TAirport>::EraseOne(TAirport airport) {
-	--data_[static_cast<uint32_t>(airport)].second;
+	--data_[static_cast<uint32_t>(airport)];
 }
   
 template <typename TAirport>
 void AirportCounter<TAirport>::EraseAll(TAirport airport) {
-	data_[static_cast<uint32_t>(airport)].second = 0;
+	data_[static_cast<uint32_t>(airport)] = 0;
 }
   
 template <typename TAirport>
 typename AirportCounter<TAirport>::Items AirportCounter<TAirport>::GetItems() const {
-	return (data_);
+	array<Item, N>	ret;
+	for (uint32_t i = 0; i < N; ++i) {
+		ret[i] = make_pair(static_cast<TAirport>(i), data_.at(i));
+	}
+	return (ret);
 }
 
 
