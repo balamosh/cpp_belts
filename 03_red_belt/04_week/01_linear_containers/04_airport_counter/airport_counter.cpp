@@ -42,7 +42,7 @@ public:
   Items GetItems() const;
 
 private:
-  array<uint32_t, N>	data_;
+  array<uint32_t, N>	data_{};
 };
 
 template <typename TAirport>
