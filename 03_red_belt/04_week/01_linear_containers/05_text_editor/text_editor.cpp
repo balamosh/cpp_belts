@@ -1,19 +1,81 @@
 #include <string>
+#include <list>
 #include "test_runner.h"
 using namespace std;
 
 class Editor {
- public:
-  // Реализуйте конструктор по умолчанию и объявленные методы
-  Editor();
-  void Left();
-  void Right();
-  void Insert(char token);
-  void Cut(size_t tokens = 1);
-  void Copy(size_t tokens = 1);
-  void Paste();
-  string GetText() const;
+public:
+	// Реализуйте конструктор по умолчанию и объявленные методы
+	Editor();
+	void	Left();
+	void	Right();
+	void	Insert(char token);
+	void	Cut(size_t tokens = 1);
+	void	Copy(size_t tokens = 1);
+	void	Paste();
+	string	GetText() const;
+private:
+	list<char>				text;
+	list<char>				buffer;
+	list<char>::iterator	cursor;
+
+	list<char>::iterator	CursorOffset(size_t tokens = 1);
 };
+
+Editor::Editor() {
+	cursor = text.begin();
+}
+
+void	Editor::Left() {
+	if (cursor != text.begin()) {
+		--cursor;
+	}
+}
+
+void	Editor::Right() {
+	if (cursor != text.end()) {
+		++cursor;
+	}
+}
+
+void	Editor::Insert(char token) {
+	text.insert(cursor, token);
+}
+
+list<char>::iterator	Editor::CursorOffset(size_t tokens) {
+	list<char>::iterator	offset_pos = cursor;
+	for (size_t i = 0; i < tokens; ++i) {
+		if (offset_pos == text.end()) {
+			break ;
+		}
+		++offset_pos;
+	}
+	return (offset_pos);
+}
+
+void	Editor::Cut(size_t tokens) {
+	list<char>::iterator	new_cursor = CursorOffset(tokens);
+	buffer = {cursor, new_cursor};
+	text.erase(cursor, new_cursor);
+	cursor = new_cursor;
+}
+
+void	Editor::Copy(size_t tokens) {
+	buffer = {cursor, CursorOffset(tokens)};
+}
+
+void	Editor::Paste() {
+	if (!buffer.empty()) {
+		text.insert(cursor, buffer.begin(), buffer.end());
+	}
+}
+
+string	Editor::GetText() const {
+	string	ret(text.begin(), text.end());
+	return (ret);
+}
+
+
 
 void TypeText(Editor& editor, const string& text) {
   for(char c : text) {
