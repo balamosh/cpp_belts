@@ -1,44 +1,42 @@
-SRCS_SUFFIX	= .cpp
+NAME		= project
 
-SRCS_DIR	= ./
+SRCS_DIR	= srcs/
+HEAD_DIR	= includes/
+BUILD_DIR	= build/
 
-SRCS		= $(shell find $(SRCS_DIR) -name "*$(SRCS_SUFFIX)")
+SRCS_FILES	= $(shell find $(SRCS_DIR) -name "*.cpp")
 
-OBJS		= $(SRCS:$(SRCS_SUFFIX)=.o)
+OBJS_FILES	= $(SRCS_FILES:.cpp=.o)
 
-HEAD		= ./
-
-NAME		= project.out
-
-TAR			= cource_project_yellow.tar
+SRCS 		= $(addprefix $(SRCS_DIR), $(SRCS_FILES))
+OBJS		= $(addprefix $(BUILD_DIR), $(OBJS_FILES))
+DEPS		= $(OBJS:.o=.d)
 
 CC			= g++
-CFLAGS		= --std=c++17
+CFLAGS		= --std=c++17 -MMD
 
-RM			= rm -f
+all: $(NAME)
 
-all				: $(NAME) tar
+$(NAME): $(OBJS)
+	$(CC) $(OBJS) -o $(NAME)
 
-obj				: $(OBJS)
+$(BUILD_DIR)%.o: $(SRCS_DIR)%.cpp $(BUILD_DIR)%.d
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -I $(HEAD_DIR) -o $@ -c $<
 
-tar				: $(TAR)
+$(BUILD_DIR)%.d: ;
 
-$(SRC_DIR)%.o 	: $(SRC_DIR)%.cpp
-	$(CC) $(CFLAGS) -c $< -o $@ -I $(HEAD)
+$(DEPS):
+-include $(wildcard $(DEPS))
 
-$(NAME)			: $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+clean: 
+	rm -rf $(BUILD_DIR)
 
-$(TAR)			:
-	tar -cvf $(TAR) $(SRCS_DIR)*$(SRCS_SUFFIX) $(HEAD)*
+fclean: clean
+	rm -rf $(NAME)
 
-clean			:
-	$(RM) $(OBJS)
+re:
+	make fclean
+	make all
 
-fclean			: clean
-	$(RM) $(NAME)
-	$(RM) $(TAR)
-
-re				: fclean all
-
-.PHONY	 		: all obj tar clean fclean re
+.PHONY: all clean fclean re

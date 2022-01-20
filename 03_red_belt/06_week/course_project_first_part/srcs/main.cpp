@@ -200,11 +200,56 @@ void TestBasicSearch() {
   TestFunctionality(docs, queries, expected);
 }
 
+void TestHeavy() {
+  const vector<string> docs_pool = {
+    "london is the capital of great britain",
+    "paris is the capital of france",
+    "berlin is the capital of germany",
+    "rome is the capital of italy",
+    "madrid is the capital of spain",
+    "lisboa is the capital of portugal",
+    "bern is the capital of switzerland",
+    "moscow is the capital of russia",
+    "kiev is the capital of ukraine",
+    "minsk is the capital of belarus",
+    "astana is the capital of kazakhstan",
+    "beijing is the capital of china",
+    "tokyo is the capital of japan",
+    "bangkok is the capital of thailand",
+    "welcome to moscow the capital of russia the third rome",
+    "amsterdam is the capital of netherlands",
+    "helsinki is the capital of finland",
+    "oslo is the capital of norway",
+    "stockgolm is the capital of sweden",
+    "riga is the capital of latvia",
+    "tallin is the capital of estonia",
+    "warsaw is the capital of poland",
+  };
+  vector<string>	docs(1000000);
+  for (int i = 0; i < 1000000; ++i) {
+	  docs[i] = docs_pool[i % docs_pool.size()];
+  }
+
+  const vector<string> queries = {"moscow is the capital of russia"};
+  const vector<string> expected = {
+    Join(' ', vector{
+      "moscow is the capital of russia:",
+      "{docid: 7, hitcount: 6}",
+      "{docid: 14, hitcount: 6}",
+      "{docid: 0, hitcount: 4}",
+      "{docid: 1, hitcount: 4}",
+      "{docid: 2, hitcount: 4}",
+    })
+  };
+  TestFunctionality(docs, queries, expected);
+}
+
 int main() {
   TestRunner tr;
-  RUN_TEST(tr, TestSerpFormat);
-  RUN_TEST(tr, TestTop5);
-  RUN_TEST(tr, TestHitcount);
-  RUN_TEST(tr, TestRanking);
-  RUN_TEST(tr, TestBasicSearch);
+  //RUN_TEST(tr, TestSerpFormat);
+  //RUN_TEST(tr, TestTop5);
+  //RUN_TEST(tr, TestHitcount);
+  //RUN_TEST(tr, TestRanking);
+  //RUN_TEST(tr, TestBasicSearch);
+  RUN_TEST(tr, TestHeavy);
 }
