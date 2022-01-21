@@ -18,6 +18,10 @@ public:
     return docs[id];
   }
 
+  size_t  Size() const {
+    return docs.size();
+  }
+
 private:
   map<string, list<size_t>> index;
   vector<string> docs;

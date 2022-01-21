@@ -1,5 +1,6 @@
 #include "search_server.h"
 #include "iterator_range.h"
+#include "profile.h"
 
 #include <algorithm>
 #include <iterator>
@@ -16,6 +17,7 @@ SearchServer::SearchServer(istream& document_input) {
 }
 
 void SearchServer::UpdateDocumentBase(istream& document_input) {
+	LOG_DURATION("document base");
   InvertedIndex new_index;
 
   for (string current_document; getline(document_input, current_document); ) {
@@ -28,19 +30,52 @@ void SearchServer::UpdateDocumentBase(istream& document_input) {
 void SearchServer::AddQueriesStream(
   istream& query_input, ostream& search_results_output
 ) {
-  for (string current_query; getline(query_input, current_query); ) {
-    const auto words = SplitIntoWords(current_query);
+	TotalDuration split("split");
+  TotalDuration count("count");
+  TotalDuration sort_t("sort");
+  TotalDuration result("result");
 
-    map<size_t, size_t> docid_count;
+  vector<size_t> docid_count(index.Size());
+  for (string current_query; getline(query_input, current_query); ) {
+    vector<string>  words;
+    { ADD_DURATION(split);
+    words = SplitIntoWords(current_query);
+    }
+
+    { ADD_DURATION(count);
     for (const auto& word : words) {
       for (const size_t docid : index.Lookup(word)) {
         docid_count[docid]++;
       }
     }
+    }
 
+    /*
     vector<pair<size_t, size_t>> search_results(
       docid_count.begin(), docid_count.end()
     );
+    */
+    vector<pair<size_t, size_t>> search_results;
+    { ADD_DURATION(sort_t);
+    for (size_t k = 0; k < 5; ++k) {
+      size_t  max_cnt = docid_count[0];
+      size_t  max_i = 0;
+      for (size_t i = 1; i < docid_count.size(); ++i) {
+        if (docid_count[i] > max_cnt) {
+          max_cnt = docid_count[i];
+          max_i = i;
+        }
+      }
+      if (max_cnt > 0) {
+        search_results.push_back({max_i, max_cnt});
+        docid_count[max_i] = 0;
+      } else {
+        break;
+      }
+    }
+    }
+    /*
+    { ADD_DURATION(sort_t);
     sort(
       begin(search_results),
       end(search_results),
@@ -52,7 +87,10 @@ void SearchServer::AddQueriesStream(
         return make_pair(lhs_hit_count, -lhs_docid) > make_pair(rhs_hit_count, -rhs_docid);
       }
     );
+    }
+    */
 
+    { ADD_DURATION(result);
     search_results_output << current_query << ':';
     for (auto [docid, hitcount] : Head(search_results, 5)) {
       search_results_output << " {"
@@ -60,6 +98,8 @@ void SearchServer::AddQueriesStream(
         << "hitcount: " << hitcount << '}';
     }
     search_results_output << endl;
+    }
+    fill(docid_count.begin(), docid_count.end(), 0);
   }
 }
 
