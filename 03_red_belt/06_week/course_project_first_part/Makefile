@@ -4,7 +4,7 @@ SRCS_DIR	= srcs/
 HEAD_DIR	= includes/
 BUILD_DIR	= build/
 
-SRCS_FILES	= $(shell find $(SRCS_DIR) -name "*.cpp")
+SRCS_FILES	= $(notdir $(shell find $(SRCS_DIR) -name "*.cpp"))
 
 OBJS_FILES	= $(SRCS_FILES:.cpp=.o)
 
