@@ -47,8 +47,8 @@ void SearchServer::AddQueriesStream(
 
     { ADD_DURATION(count);
     for (const auto& word : words) {
-      for (const size_t docid : index.Lookup(word)) {
-        docid_count[docid]++;
+      for (const auto [docid, cnt] : index.Lookup(word)) {
+        docid_count[docid] += cnt;
       }
     }
     }
@@ -58,28 +58,6 @@ void SearchServer::AddQueriesStream(
         search_results.emplace_back(i, docid_count[i]);
       }
     }
-
-   /*
-    { ADD_DURATION(sort_t);
-    for (size_t k = 0; k < 5; ++k) {
-      size_t  max_cnt = docid_count[0];
-      size_t  max_i = 0;
-      for (size_t i = 1; i < docid_count.size(); ++i) {
-        if (docid_count[i] > max_cnt) {
-          max_cnt = docid_count[i];
-          max_i = i;
-        }
-      }
-      if (max_cnt > 0) {
-        search_results.push_back({max_i, max_cnt});
-        docid_count[max_i] = 0;
-      } else {
-        break;
-      }
-    }
-    }
-    */
-
 
     { ADD_DURATION(sort_t);
     partial_sort(
@@ -95,7 +73,6 @@ void SearchServer::AddQueriesStream(
       }
     );
     }
-
 
     { ADD_DURATION(result);
     search_results_output << current_query << ':';
@@ -117,12 +94,16 @@ void InvertedIndex::Add(const string& document) {
   docs.push_back(document);
 
   const size_t docid = docs.size() - 1;
+  map<string, size_t> word_cnt;
   for (const auto& word : SplitIntoWords(document)) {
-    index[word].push_back(docid);
+    word_cnt[word]++;
+  }
+  for (const auto& [word, cnt] : word_cnt) {
+    index[move(word)].emplace_back(docid, cnt);
   }
 }
 
-const list<size_t>& InvertedIndex::Lookup(const string& word) const {
+const vector<pair<size_t, size_t>>& InvertedIndex::Lookup(const string& word) const {
   if (auto it = index.find(word); it != index.end()) {
     return it->second;
   } else {
