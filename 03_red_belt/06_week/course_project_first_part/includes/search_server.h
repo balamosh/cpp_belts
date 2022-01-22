@@ -12,7 +12,7 @@ using namespace std;
 class InvertedIndex {
 public:
   void Add(const string& document);
-  list<size_t> Lookup(const string& word) const;
+  const list<size_t>& Lookup(const string& word) const;
 
   const string& GetDocument(size_t id) const {
     return docs[id];
@@ -23,6 +23,7 @@ public:
   }
 
 private:
+  list<size_t>  empty_;
   map<string, list<size_t>> index;
   vector<string> docs;
 };
