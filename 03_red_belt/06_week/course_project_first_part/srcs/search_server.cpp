@@ -40,6 +40,7 @@ void SearchServer::UpdateDocumentBase(istream& document_input) {
   };
 
   futures.push_back(async(updater));
+  //async(updater);
 }
 
 void SearchServer::AddQueriesStream(
@@ -47,35 +48,35 @@ void SearchServer::AddQueriesStream(
 ) {
 
   auto  query = [&search_results_output, &query_input, this] {
-    vector<size_t> docid_count;
-    vector<pair<size_t, size_t>> search_results;
+    vector<size_t>  docid_count(50000);
+    vector<size_t>  docid_index(50000);
     for (string current_query; getline(query_input, current_query); ) {
       
       auto  words = SplitIntoWords(current_query);
 
-      search_results.clear();
-      fill(docid_count.begin(), docid_count.end(), 0);
-      
+      size_t  id = 0;
       {
         auto  index_access = index.GetAccess();
         auto& current_index = index_access.ref_to_value;
-        auto  new_size = current_index.Size();
-        if (new_size > docid_count.size()) {
-          docid_count.resize(new_size);
-          search_results.reserve(new_size);
-        }
 
         for (const auto& word : words) {
           for (const auto [docid, cnt] : current_index.Lookup(word)) {
+            if (docid_count[docid] == 0) {
+              docid_index[id++] = docid;
+            }
             docid_count[docid] += cnt;
           }
         }
       }
 
-      for(size_t i = 0; i < docid_count.size(); ++i) {
-        if (docid_count[i] > 0) {
-          search_results.emplace_back(i, docid_count[i]);
-        }
+      vector<pair<size_t, size_t>> search_results;
+      for (size_t docid = 0; docid < id; ++docid)
+      {
+        size_t count = 0;
+        size_t id = 0;
+        swap(count, docid_count[docid_index[docid]]);
+        swap(id, docid_index[docid]);
+        search_results.emplace_back(id, count);
       }
 
       partial_sort(
@@ -102,18 +103,22 @@ void SearchServer::AddQueriesStream(
   };
   
   futures.push_back(async(query));
+  //async(query);
 }
 
 void InvertedIndex::Add(const string& document) {
   docs.push_back(document);
 
   const size_t docid = docs.size() - 1;
-  map<string, size_t> word_cnt;
-  for (const auto& word : SplitIntoWords(document)) {
-    word_cnt[move(word)]++;
-  }
-  for (const auto& [word, cnt] : word_cnt) {
-    index[move(word)].emplace_back(docid, cnt);
+  
+  for (const auto& word : SplitIntoWords(docs.back()))
+  {
+    auto& docid_cnt = index[word];
+    if(!docid_cnt.empty() && docid_cnt.back().first == docid) {
+      docid_cnt.back().second += 1;
+    } else {
+      docid_cnt.emplace_back(docid, 1);
+    }
   }
 }
 
