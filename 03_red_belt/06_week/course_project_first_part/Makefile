@@ -13,12 +13,12 @@ OBJS		= $(addprefix $(BUILD_DIR), $(OBJS_FILES))
 DEPS		= $(OBJS:.o=.d)
 
 CC			= g++
-CFLAGS		= --std=c++17 -MMD
+CFLAGS		= --std=c++17 -MMD -pthread
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(OBJS) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
 $(BUILD_DIR)%.o: $(SRCS_DIR)%.cpp $(BUILD_DIR)%.d
 	@mkdir -p $(@D)

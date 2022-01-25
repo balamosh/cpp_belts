@@ -1,5 +1,7 @@
 #pragma once
 
+#include "synchronized.h"
+
 #include <istream>
 #include <ostream>
 #include <set>
@@ -7,6 +9,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <future>
 using namespace std;
 
 class InvertedIndex {
@@ -36,5 +39,6 @@ public:
   void AddQueriesStream(istream& query_input, ostream& search_results_output);
 
 private:
-  InvertedIndex index;
+  Synchronized<InvertedIndex> index;
+  vector<future<void>>  futures;
 };
